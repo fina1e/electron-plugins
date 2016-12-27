@@ -6,10 +6,13 @@ var path = require('path'),
 function getPlugins(plugins) {
     var mapped = []
     Object.getOwnPropertyNames(plugins).forEach(function (name) {
+       // hier wird der aktuelle plugin gemapped, nur wenn er auch aufgerufen wurde. macht nicht viel sinn, muss geändert werden!
+      if(name==pluginname){
         mapped.push({
             name: name,
             version: plugins[name]
         })
+      }
     })
 
     return mapped
@@ -23,7 +26,9 @@ function getPluginPackage(plugin, callback) {
     async.map(
         ['link', version],
         function (version, callback) {
-            var packagePath = path.join(context.pluginsDir, name, version, 'package.json')
+            //var packagePath = path.join(context.pluginsDir, name, version, 'package.json')
+            // geändert: im pluginordner schauen
+            var packagePath = path.join(path.dirname(process.mainModule.filename),'/../pluginfolder/', name, '/package.json')
             fs.readFile(packagePath, {encoding:'utf8'}, function (err, result) {
                 if(err) return callback()
                 callback(null, {
@@ -51,7 +56,9 @@ function loadPlugin(context, results, callback) {
             var name = plugin.name
             var version = plugin.version
             var depName = name.replace(/-/g, '.')
-            var file = path.resolve(path.join(context.pluginsDir, name, version), main)
+            //var file = path.resolve(path.join(context.pluginsDir, name, version), main)
+            // geändert: in Pluginordner schauen
+            var file = path.resolve(path.join(path.dirname(process.mainModule.filename),'/../pluginfolder/', name), main)
             var Plugin = require(file)
             var mod = new Plugin(context.appContext)
             modules.push(mod)
@@ -64,7 +71,8 @@ function loadPlugin(context, results, callback) {
     callback(null, dependencies, modules)
 }
 
-function load(appContext, callback) {
+//geändert: pluginname hinzugefügt, dass nur ein bestimmtest plugin angesprochen wird
+function load(pluginname, appContext, callback) {
     var appDir = path.dirname(process.mainModule.filename)
     var packagePath = path.join(appDir, 'package.json')
     fs.readFile(packagePath, {encoding: 'utf8'}, function (err, contents) {
@@ -85,7 +93,7 @@ function load(appContext, callback) {
                 appContext: appContext
             }
             async.map(
-                getPlugins(context.plugins),
+                getPlugins(context.plugins, pluginname), //pluginname wird übergeben
                 getPluginPackage.bind(context),
                 function (err, results) {
                     if(err) return callback(err)
