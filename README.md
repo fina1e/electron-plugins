@@ -4,10 +4,8 @@ Plugin loader for electron applications.
 ## Installation
 download electron-plugins and save it to the project
 
-## Usage
-...
-### for the main application:
-In your electron render process you can load your plugins like so:
+## Usage for the main application:
+In your electron render process you can load your plugins like so: \n
 ```
 var plugins = require('electron-plugins');
 ```
@@ -23,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 create into the html file a div space for each plugin with id = pluginnamepluginname.
 also a extra file "plugin.json" is needed, where the specific plugins are declared.
 
-### for the plugin:
+### Usage for the plugin:
 Your plugin should export a constructor function, which is passed the context object upon instantiation. You can put whatever you want onto the context object.
 the id is made up of the pluginame, written two times together. 
 ```
