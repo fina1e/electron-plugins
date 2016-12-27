@@ -5,6 +5,7 @@ Plugin loader for electron applications.
 download electron-plugins and save it to the project
 
 ## Usage
+...
 ### for the main application:
 In your electron render process you can load your plugins like so:
 ```
