@@ -74,7 +74,7 @@ function loadPlugin(context, results, callback) {
 //geändert: pluginname hinzugefügt, dass nur ein bestimmtest plugin angesprochen wird
 function load(pluginname, appContext, callback) {
     var appDir = path.dirname(process.mainModule.filename)
-    var packagePath = path.join(appDir, 'package.json')
+    var packagePath = path.join(appDir, 'plugin.json') //änderung von package auf plugin
     fs.readFile(packagePath, {encoding: 'utf8'}, function (err, contents) {
         if(err) return callback(err);
         var config = JSON.parse(contents)
